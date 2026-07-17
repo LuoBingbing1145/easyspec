@@ -9,8 +9,7 @@
 		"MotherWang"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"sources": "https://github.com/LuoBingbing1145/easyspec"
 	},
 	"license": "CC0-1.0",
 	"icon": "assets/easyspec/icon.png",
