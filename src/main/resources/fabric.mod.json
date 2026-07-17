@@ -1,0 +1,42 @@
+{
+	"schemaVersion": 1,
+	"id": "easyspec",
+	"version": "${version}",
+	"name": "EasySpec",
+	"description": "输入 !s 切换旁观者模式，再次输入返回原位。",
+	"authors": [
+		"LBB285",
+		"MotherWang"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/easyspec/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"lbb.easyspec.EasySpec"
+		],
+		"client": [
+			"lbb.easyspec.client.EasySpecClient"
+		],
+		"fabric-datagen": [
+			"lbb.easyspec.client.EasySpecDataGenerator"
+		]
+	},
+	"mixins": [
+		"easyspec.mixins.json",
+		{
+			"config": "easyspec.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.19.3",
+		"minecraft": "~1.20.1",
+		"java": ">=17",
+		"fabric-api": "*"
+	}
+}

@@ -1,0 +1,14 @@
+{
+	"required": true,
+	"package": "lbb.easyspec.mixin",
+	"compatibilityLevel": "JAVA_17",
+	"mixins": [
+		"ChatMessageMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"overwrites": {
+		"requireAnnotations": true
+	}
+}
