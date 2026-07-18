@@ -33,7 +33,11 @@ public abstract class ChatMessageMixin {
                 // and teleport/gamemode changes require the main server thread
                 ServerPlayer p = player;
                 p.server.execute(() -> SpectatorManager.toggle(p));
-                ci.cancel();
+
+                // Only cancel the chat message when hideTrigger is enabled
+                if (Config.getInstance().isHideTrigger()) {
+                    ci.cancel();
+                }
             }
         }
     }

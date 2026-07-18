@@ -18,6 +18,7 @@ public class Config {
 
     private String language = "en_us";
     private String trigger = "s";
+    private boolean hideTrigger = false;
 
     private static Config instance;
 
@@ -36,6 +37,10 @@ public class Config {
         return trigger;
     }
 
+    public boolean isHideTrigger() {
+        return hideTrigger;
+    }
+
     public static Config load() {
         Path configDir = FabricLoader.getInstance().getConfigDir();
         Path configFile = configDir.resolve("easyspec.json");
@@ -48,8 +53,10 @@ public class Config {
                 JsonObject raw = GSON.fromJson(json, JsonObject.class);
                 boolean repaired = raw == null || !raw.has("language");
                 if (raw == null || !raw.has("trigger")) repaired = true;
+                if (raw == null || !raw.has("hideTrigger")) repaired = true;
                 if (raw == null || !raw.has("_comment1")) repaired = true;
                 if (raw == null || !raw.has("_comment2")) repaired = true;
+                if (raw == null || !raw.has("_comment3")) repaired = true;
 
                 instance = GSON.fromJson(json, Config.class);
                 if (instance == null) {
@@ -64,6 +71,11 @@ public class Config {
                 }
                 if (instance.trigger == null) {
                     instance.trigger = "s";
+                    repaired = true;
+                }
+                // hideTrigger missing from JSON — Gson leaves primitive boolean as false, which is the desired default
+                if (raw != null && !raw.has("hideTrigger")) {
+                    instance.hideTrigger = false;
                     repaired = true;
                 }
 
@@ -96,7 +108,7 @@ public class Config {
             saveConfig(configFile);
         }
 
-        LOGGER.info("EasySpec config loaded: language={}, trigger=!{}", instance.language, instance.trigger);
+        LOGGER.info("EasySpec config loaded: language={}, trigger=!{}, hideTrigger={}", instance.language, instance.trigger, instance.hideTrigger);
         return instance;
     }
 
@@ -111,11 +123,13 @@ public class Config {
                     """
                             {
                               "_comment1": "Language: en_us, zh_cn, ja_jp, ko_kr, fr_fr, de_de, es_es, ru_ru, pt_br",
-                              "_comment2": "Trigger word: type '!' + this in chat to toggle spectator. Default: s (i.e. !s)",
                               "language": "%s",
-                              "trigger": "%s"
+                              "_comment2": "Trigger word: type '!' + this in chat to toggle spectator. Default: s (i.e. !s)",
+                              "trigger": "%s",
+                              "_comment3": "Hide the trigger message from chat (default: false). Set true to hide it so other players don't see it in chat.",
+                              "hideTrigger": %s
                             }
-                            """.formatted(instance.language, instance.trigger);
+                            """.formatted(instance.language, instance.trigger, instance.hideTrigger);
             Files.writeString(configFile, json);
             LOGGER.info("Saved config to {}", configFile);
         } catch (IOException e) {

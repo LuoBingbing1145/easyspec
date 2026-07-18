@@ -15,7 +15,7 @@
 - **One-key toggle** — Type `!s` (or your custom trigger) to switch to spectator; type it again to restore.
 - **Full state preservation** — Your game mode (survival/creative/adventure), position (x/y/z), rotation (yaw/pitch), and **dimension** are all saved and restored.
 - **Fully server-side** — No client mod needed. Works with vanilla clients.
-- **Silent trigger** — The trigger message is intercepted and never broadcast to other players.
+- **Silent trigger** — The trigger message is intercepted and never broadcast to other players. Can be disabled via `hideTrigger: false`.
 - **Multilingual** — 9 languages supported; messages show the actual trigger word you configured.
 - **Config auto-repair** — Missing or invalid config fields are automatically reset with a warning, keeping your settings intact.
 - **ModMenu support** — Description translation key included for ModMenu compatibility.
@@ -58,18 +58,21 @@ The config file is located at `config/easyspec.json` in your server's root direc
 ```json
 {
   "_comment1": "Language: en_us, zh_cn, ja_jp, ko_kr, fr_fr, de_de, es_es, ru_ru, pt_br",
-  "_comment2": "Trigger word: type '!' + this in chat to toggle spectator. Default: s (i.e. !s)",
   "language": "en_us",
-  "trigger": "s"
+  "_comment2": "Trigger word: type '!' + this in chat to toggle spectator. Default: s (i.e. !s)",
+  "trigger": "s",
+  "_comment3": "Hide the trigger message from chat (default: false). Set true to hide it so other players don't see it in chat.",
+  "hideTrigger": false
 }
 ```
 
 ### Options
 
-| Field      | Type   | Default   | Description                                                      |
-|------------|--------|-----------|------------------------------------------------------------------|
-| `language` | string | `"en_us"` | Language for feedback messages. See supported languages below.   |
-| `trigger`  | string | `"s"`     | The word after `!` used to toggle. E.g. `"spec"` → type `!spec`. |
+| Field          | Type    | Default   | Description                                                      |
+|----------------|---------|-----------|------------------------------------------------------------------|
+| `language`     | string  | `"en_us"` | Language for feedback messages. See supported languages below.   |
+| `trigger`      | string  | `"s"`     | The word after `!` used to toggle. E.g. `"spec"` → type `!spec`. |
+| `hideTrigger`  | boolean | `false`   | Whether to hide the trigger message from chat. Set `true` to hide it. |
 
 If any field is missing or invalid, the mod will **auto-reset** the bad field, log a warning, and save the corrected file.
 
