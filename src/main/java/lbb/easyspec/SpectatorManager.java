@@ -1,11 +1,14 @@
 package lbb.easyspec;
 
+import lbb.easyspec.config.Config;
+import lbb.easyspec.config.Messages;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 import java.util.UUID;
@@ -23,7 +26,7 @@ public class SpectatorManager {
      * If not currently tracked, saves current state and switches to spectator.
      * If currently tracked, restores original state and removes tracking.
      */
-    public static void toggle(ServerPlayer player) {
+    public static void toggle(@NotNull ServerPlayer player) {
         UUID uuid = player.getUUID();
         PlayerState existing = states.remove(uuid);
 
@@ -39,7 +42,7 @@ public class SpectatorManager {
                 );
             }
             player.sendSystemMessage(Component.literal(
-                "§a已返回原游戏模式并传送回原位"
+                Messages.get("restored")
             ));
         } else {
             // Save current state and switch to spectator
@@ -53,7 +56,7 @@ public class SpectatorManager {
             states.put(uuid, state);
             player.setGameMode(GameType.SPECTATOR);
             player.sendSystemMessage(Component.literal(
-                "§a已切换到旁观者模式，输入 !s 返回原位"
+                Messages.get("toggled").formatted(Config.getInstance().getTrigger())
             ));
         }
     }
@@ -65,21 +68,6 @@ public class SpectatorManager {
         return states.containsKey(uuid);
     }
 
-    private static class PlayerState {
-        final GameType gameType;
-        final double x, y, z;
-        final float yRot, xRot;
-        final ResourceKey<Level> dimension;
-
-        PlayerState(GameType gameType, double x, double y, double z,
-                    float yRot, float xRot, ResourceKey<Level> dimension) {
-            this.gameType = gameType;
-            this.x = x;
-            this.y = y;
-            this.z = z;
-            this.yRot = yRot;
-            this.xRot = xRot;
-            this.dimension = dimension;
-        }
+    private record PlayerState(GameType gameType, double x, double y, double z, float yRot, float xRot, ResourceKey<Level> dimension) {
     }
 }

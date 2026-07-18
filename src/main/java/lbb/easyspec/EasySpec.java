@@ -1,5 +1,6 @@
 package lbb.easyspec;
 
+import lbb.easyspec.config.Config;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.resources.ResourceLocation;
 
@@ -14,7 +15,8 @@ public class EasySpec implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        LOGGER.info("EasySpec initialized! Players can type !s in chat to toggle spectator mode.");
+        Config.load();
+        LOGGER.info("EasySpec initialized!");
     }
 
     @Contract("_ -> new")

@@ -3,13 +3,14 @@
 	"id": "easyspec",
 	"version": "${version}",
 	"name": "EasySpec",
-	"description": "输入 !s 切换旁观者模式，再次输入返回原位。",
+	"description": "Type !s to toggle spectator mode, type !s again to return.",
 	"authors": [
 		"LBB285",
 		"MotherWang"
 	],
 	"contact": {
-		"sources": "https://github.com/LuoBingbing1145/easyspec"
+		"sources": "https://github.com/LuoBingbing1145/easyspec",
+		"issues": "https://github.com/LuoBingbing1145/easyspec/issues"
 	},
 	"license": "CC0-1.0",
 	"icon": "assets/easyspec/icon.png",
@@ -26,11 +27,7 @@
 		]
 	},
 	"mixins": [
-		"easyspec.mixins.json",
-		{
-			"config": "easyspec.client.mixins.json",
-			"environment": "client"
-		}
+		"easyspec.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=0.19.2",

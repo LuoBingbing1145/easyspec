@@ -1,0 +1,7 @@
+{
+  "mod.easyspec.name": "EasySpec",
+  "modmenu.descriptionTranslation.easyspec": "Gib den konfigurierten Auslöser im Chat ein, um in den Zuschauermodus zu wechseln und zurückzukehren.",
+
+  "message.easyspec.toggled": "§aZuschauermodus aktiviert. Gib !%s ein, um zurückzukehren.",
+  "message.easyspec.restored": "§aUrsprünglicher Spielmodus wiederhergestellt und zurück teleportiert."
+}

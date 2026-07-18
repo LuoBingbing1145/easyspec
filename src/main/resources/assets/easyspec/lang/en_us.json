@@ -1,0 +1,7 @@
+{
+  "mod.easyspec.name": "EasySpec",
+  "modmenu.descriptionTranslation.easyspec": "Type the configured trigger in chat to toggle spectator mode and return.",
+
+  "message.easyspec.toggled": "§aSwitched to spectator mode. Type !%s to return.",
+  "message.easyspec.restored": "§aRestored to original game mode and teleported back."
+}
