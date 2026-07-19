@@ -68,11 +68,11 @@ The config file is located at `config/easyspec.json` in your server's root direc
 
 ### Options
 
-| Field          | Type    | Default   | Description                                                      |
-|----------------|---------|-----------|------------------------------------------------------------------|
-| `language`     | string  | `"en_us"` | Language for feedback messages. See supported languages below.   |
-| `trigger`      | string  | `"s"`     | The word after `!` used to toggle. E.g. `"spec"` → type `!spec`. |
-| `hideTrigger`  | boolean | `false`   | Whether to hide the trigger message from chat. Set `true` to hide it. |
+| Field         | Type    | Default   | Description                                                           |
+|---------------|---------|-----------|-----------------------------------------------------------------------|
+| `language`    | string  | `"en_us"` | Language for feedback messages. See supported languages below.        |
+| `trigger`     | string  | `"s"`     | The word after `!` used to toggle. E.g. `"spec"` → type `!spec`.      |
+| `hideTrigger` | boolean | `false`   | Whether to hide the trigger message from chat. Set `true` to hide it. |
 
 If any field is missing or invalid, the mod will **auto-reset** the bad field, log a warning, and save the corrected file.
 
@@ -105,6 +105,20 @@ If any field is missing or invalid, the mod will **auto-reset** the bad field, l
 
 ---
 
+## Commands
+
+The following commands are available for server operators (permission level 2):
+
+| Command                    | Description                                   |
+|----------------------------|-----------------------------------------------|
+| `/easyspec reload`         | Reload config from `config/easyspec.json`     |
+| `/easyspec reset`          | Reset config to default values and save       |
+
+> **`/easyspec reload`** re-reads the config file from disk without restarting the server.
+> **`/easyspec reset`** restores all config fields to their defaults (`en_us`, `s`, `false`) and overwrites the file.
+
+---
+
 ## Language Files
 
 If you want to customize or add a language, the translation files are located in the mod JAR at `assets/easyspec/lang/`. Each file is a simple JSON with the following keys:
@@ -115,6 +129,8 @@ If you want to customize or add a language, the translation files are located in
 | `modmenu.descriptionTranslation.easyspec` | ModMenu description                                             |
 | `message.easyspec.toggled`                | Message when entering spectator (use `%s` for the trigger word) |
 | `message.easyspec.restored`               | Message when returning from spectator                           |
+| `message.easyspec.reloaded`               | Message shown after `/easyspec reload`                          |
+| `message.easyspec.reset`                  | Message shown after `/easyspec reset`                           |
 
 ---
 
@@ -136,17 +152,20 @@ The built JAR will be in `build/libs/`.
 
 ## For Developers
 
-EasySpec's core is intentionally minimal — one mixin, one manager, one config class:
+EasySpec's core is intentionally minimal:
 
 ```
 src/main/java/lbb/easyspec/
 ├── EasySpec.java              # Mod entrypoint
 ├── SpectatorManager.java      # Toggle logic & state storage
+├── command/
+│   └── EasySpecCommand.java   # /easyspec reload & reset commands
 ├── config/
 │   ├── Config.java            # Config loading & auto-repair
 │   └── Messages.java          # Translation system
 └── mixin/
-    └── ChatMessageMixin.java  # Chat interception mixin
+    ├── ChatMessageMixin.java  # Chat interception mixin
+    └── CommandRegisterMixin.java  # Command registration mixin
 ```
 
 The mixin targets `ServerGamePacketListenerImpl#handleChat` and defers work to the server thread, making it safe for any server environment.
