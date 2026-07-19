@@ -3,5 +3,8 @@
   "modmenu.descriptionTranslation.easyspec": "Escribe el texto configurado en el chat para alternar al modo espectador y regresar.",
 
   "message.easyspec.toggled": "§aModo espectador activado. Escribe !%s para volver.",
-  "message.easyspec.restored": "§aModo de juego original restaurado y teletransportado de vuelta."
+  "message.easyspec.restored": "§aModo de juego original restaurado y teletransportado de vuelta.",
+
+  "message.easyspec.reloaded": "§a¡Configuración recargada con éxito!",
+  "message.easyspec.reset": "§a¡Configuración restablecida a valores predeterminados!"
 }

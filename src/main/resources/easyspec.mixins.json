@@ -3,7 +3,8 @@
 	"package": "lbb.easyspec.mixin",
 	"compatibilityLevel": "JAVA_17",
 	"mixins": [
-		"ChatMessageMixin"
+		"ChatMessageMixin",
+		"CommandRegisterMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

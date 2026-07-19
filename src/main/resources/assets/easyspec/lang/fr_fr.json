@@ -3,5 +3,8 @@
   "modmenu.descriptionTranslation.easyspec": "Tapez le mot-clé configuré dans le chat pour basculer en mode spectateur et revenir.",
 
   "message.easyspec.toggled": "§aMode spectateur activé. Tapez !%s pour revenir.",
-  "message.easyspec.restored": "§aMode de jeu original restauré et téléportation effectuée."
+  "message.easyspec.restored": "§aMode de jeu original restauré et téléportation effectuée.",
+
+  "message.easyspec.reloaded": "§aFichier de configuration rechargé avec succès !",
+  "message.easyspec.reset": "§aConfiguration réinitialisée aux valeurs par défaut !"
 }

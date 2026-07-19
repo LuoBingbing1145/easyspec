@@ -113,6 +113,18 @@ public class Config {
     }
 
     /**
+     * Reset the config to default values, overwrite the file on disk, and
+     * clear the messages cache so the next lookup uses the new language.
+     */
+    public static void reset() {
+        instance = new Config();
+        Path configDir = FabricLoader.getInstance().getConfigDir();
+        Path configFile = configDir.resolve("easyspec.json");
+        saveConfig(configFile);
+        LOGGER.info("EasySpec config reset to defaults");
+    }
+
+    /**
      * Save config with human-readable comments, using the current instance values.
      * Used for both first-time creation and repairing missing/invalid fields.
      */

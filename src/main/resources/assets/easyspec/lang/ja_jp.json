@@ -3,5 +3,8 @@
   "modmenu.descriptionTranslation.easyspec": "チャットで設定したトリガーを入力すると spectator mode に切り替わり、もう一度入力すると戻ります。",
 
   "message.easyspec.toggled": "§a spectator mode に切り替わりました。!%s で元の場所に戻れます",
-  "message.easyspec.restored": "§a元のゲームモードに戻り、元の場所にテレポートしました"
+  "message.easyspec.restored": "§a元のゲームモードに戻り、元の場所にテレポートしました",
+
+  "message.easyspec.reloaded": "§a設定ファイルを再読み込みしました！",
+  "message.easyspec.reset": "§a設定をデフォルト値にリセットしました！"
 }

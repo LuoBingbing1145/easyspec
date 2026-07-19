@@ -3,5 +3,8 @@
   "modmenu.descriptionTranslation.easyspec": "在聊天栏输入配置的指令切换旁观者模式，再次输入返回原位。",
 
   "message.easyspec.toggled": "§a已切换到旁观者模式，输入 !%s 返回原位",
-  "message.easyspec.restored": "§a已返回原游戏模式并传送回原位"
+  "message.easyspec.restored": "§a已返回原游戏模式并传送回原位",
+
+  "message.easyspec.reloaded": "§a配置文件已重新加载！",
+  "message.easyspec.reset": "§a配置文件已重置为默认值！"
 }

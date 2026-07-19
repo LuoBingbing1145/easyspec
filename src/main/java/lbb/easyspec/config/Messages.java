@@ -25,6 +25,16 @@ public class Messages {
     private static String currentLang = null;
     private static Map<String, String> currentMessages = null;
 
+    /**
+     * Forces the messages cache to be cleared so the next call to {@link #get(String)}
+     * re-reads the language file from disk/assets.
+     * Used by the /easyspec reload command to pick up config changes.
+     */
+    public static void reload() {
+        currentLang = null;
+        currentMessages = null;
+    }
+
     public static String get(String key) {
         String lang = Config.getInstance().getLanguage();
         if (!lang.equals(currentLang) || currentMessages == null) {
