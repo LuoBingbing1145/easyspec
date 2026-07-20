@@ -14,6 +14,8 @@
 
 - **One-key toggle** — Type `!s` (or your custom trigger) to switch to spectator; type it again to restore.
 - **Full state preservation** — Your game mode (survival/creative/adventure), position (x/y/z), rotation (yaw/pitch), and **dimension** are all saved and restored.
+- **Survives server restarts** — Player states are persisted to the world save via Minecraft's `SavedData` system. Restart the server, and toggling back still works perfectly.
+- **Per-world scoping** — Data is stored per world save file, not globally. Different worlds have independent state tracking.
 - **Fully server-side** — No client mod needed. Works with vanilla clients.
 - **Silent trigger** — The trigger message is intercepted and never broadcast to other players. Can be disabled via `hideTrigger: false`.
 - **Multilingual** — 9 languages supported; messages show the actual trigger word you configured.
@@ -31,6 +33,8 @@
 4. Typing `!s` again restores the saved state — game mode, position, rotation, and dimension.
 
 The whole mod runs on the **server thread** via `server.execute(...)`, so it's safe with Netty-based chat handling.
+
+> **Persistence:** Player states are saved to `world/data/easyspec-player-states.dat` via Minecraft's `SavedData` system. This means toggling back works correctly even after a server restart — the original game mode, position, and dimension are never lost.
 
 ---
 
@@ -157,7 +161,8 @@ EasySpec's core is intentionally minimal:
 ```
 src/main/java/lbb/easyspec/
 ├── EasySpec.java              # Mod entrypoint
-├── SpectatorManager.java      # Toggle logic & state storage
+├── SpectatorManager.java      # Toggle logic & SavedData-backed persistence
+│   └── PlayerStateStore       # Inner SavedData: persists states per-world
 ├── command/
 │   └── EasySpecCommand.java   # /easyspec reload & reset commands
 ├── config/
@@ -167,6 +172,11 @@ src/main/java/lbb/easyspec/
     ├── ChatMessageMixin.java  # Chat interception mixin
     └── CommandRegisterMixin.java  # Command registration mixin
 ```
+
+**Persistence design:** `SpectatorManager.PlayerStateStore` extends `SavedData` and is obtained via `server.overworld().getDataStorage().computeIfAbsent(...)`. States are serialized as JSON inside a single NBT `CompoundTag` string field, stored at `world/data/easyspec-player-states.dat`. This ensures:
+- Data survives server restarts
+- Each world save has independent state tracking
+- Minecraft's auto-save mechanism handles flush timing
 
 The mixin targets `ServerGamePacketListenerImpl#handleChat` and defers work to the server thread, making it safe for any server environment.
 
