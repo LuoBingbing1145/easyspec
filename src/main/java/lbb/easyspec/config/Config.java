@@ -19,6 +19,7 @@ public class Config {
     private String language = "en_us";
     private String trigger = "s";
     private boolean hideTrigger = false;
+    private int permissionLevel = 2;
 
     private static Config instance;
 
@@ -41,6 +42,10 @@ public class Config {
         return hideTrigger;
     }
 
+    public int getPermissionLevel() {
+        return permissionLevel;
+    }
+
     public static Config load() {
         Path configDir = FabricLoader.getInstance().getConfigDir();
         Path configFile = configDir.resolve("easyspec.json");
@@ -54,9 +59,11 @@ public class Config {
                 boolean repaired = raw == null || !raw.has("language");
                 if (raw == null || !raw.has("trigger")) repaired = true;
                 if (raw == null || !raw.has("hideTrigger")) repaired = true;
+                if (raw == null || !raw.has("permissionLevel")) repaired = true;
                 if (raw == null || !raw.has("_comment1")) repaired = true;
                 if (raw == null || !raw.has("_comment2")) repaired = true;
                 if (raw == null || !raw.has("_comment3")) repaired = true;
+                if (raw == null || !raw.has("_comment4")) repaired = true;
 
                 instance = GSON.fromJson(json, Config.class);
                 if (instance == null) {
@@ -95,6 +102,13 @@ public class Config {
                     instance.trigger = instance.trigger.trim();
                 }
 
+                // Validate permissionLevel (must be 0-4)
+                if (instance.permissionLevel < 0 || instance.permissionLevel > 4) {
+                    LOGGER.warn("Invalid permissionLevel '{}' in config, resetting to default 2", instance.permissionLevel);
+                    instance.permissionLevel = 2;
+                    repaired = true;
+                }
+
                 // Re-save with comments if anything was missing or invalid
                 if (repaired) {
                     saveConfig(configFile);
@@ -108,7 +122,7 @@ public class Config {
             saveConfig(configFile);
         }
 
-        LOGGER.info("EasySpec config loaded: language={}, trigger=!{}, hideTrigger={}", instance.language, instance.trigger, instance.hideTrigger);
+        LOGGER.info("EasySpec config loaded: language={}, trigger=!{}, hideTrigger={}, permissionLevel={}", instance.language, instance.trigger, instance.hideTrigger, instance.permissionLevel);
         return instance;
     }
 
@@ -137,6 +151,7 @@ public class Config {
             case "language" -> config.language = "en_us";
             case "trigger" -> config.trigger = "s";
             case "hideTrigger" -> config.hideTrigger = false;
+            case "permissionLevel" -> config.permissionLevel = 2;
             default ->
                     throw new IllegalArgumentException(Messages.get("set_error_invalid_key").formatted(key));
         }
@@ -178,6 +193,17 @@ public class Config {
                     throw new IllegalArgumentException(Messages.get("set_error_invalid_value").formatted(key, value));
                 }
             }
+            case "permissionLevel" -> {
+                try {
+                    int level = Integer.parseInt(value);
+                    if (level < 0 || level > 4) {
+                        throw new IllegalArgumentException(Messages.get("set_error_invalid_value").formatted(key, value));
+                    }
+                    config.permissionLevel = level;
+                } catch (NumberFormatException e) {
+                    throw new IllegalArgumentException(Messages.get("set_error_invalid_value").formatted(key, value));
+                }
+            }
             default ->
                     throw new IllegalArgumentException(Messages.get("set_error_invalid_key").formatted(key));
         }
@@ -202,9 +228,11 @@ public class Config {
                               "_comment2": "Trigger word: type '!' + this in chat to toggle spectator. Default: s (i.e. !s)",
                               "trigger": "%s",
                               "_comment3": "Hide the trigger message from chat (default: false). Set true to hide it so other players don't see it in chat.",
-                              "hideTrigger": %s
+                              "hideTrigger": %s,
+                              "_comment4": "Required permission level for /easyspec commands (0-4). Default: 2 (operator). Set 0 for all players.",
+                              "permissionLevel": %d
                             }
-                            """.formatted(instance.language, instance.trigger, instance.hideTrigger);
+                            """.formatted(instance.language, instance.trigger, instance.hideTrigger, instance.permissionLevel);
             Files.writeString(configFile, json);
             LOGGER.info("Saved config to {}", configFile);
         } catch (IOException e) {

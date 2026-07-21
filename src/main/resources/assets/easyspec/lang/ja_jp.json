@@ -10,8 +10,8 @@
   "message.easyspec.reset_key": "§a%s をデフォルト値にリセットしました",
 
   "message.easyspec.set_success": "§a%s を %s に設定しました",
-  "message.easyspec.set_error_invalid_key": "§c不明な設定オプション: %s。使用可能: language, trigger, hideTrigger",
+  "message.easyspec.set_error_invalid_key": "§c不明な設定オプション: %s。使用可能: language, trigger, hideTrigger, permissionLevel",
   "message.easyspec.set_error_invalid_value": "§c%s の値が無効です: %s",
 
-  "message.easyspec.info": "§a--- 設定 ---\n §7言語: §f%s\n §7トリガー: §f!%s\n §7トリガーを隠す: §f%s"
+  "message.easyspec.info": "§a--- 設定 ---\n §7言語: §f%s\n §7トリガー: §f!%s\n §7トリガーを隠す: §f%s\n §7権限レベル: §f%s"
 }

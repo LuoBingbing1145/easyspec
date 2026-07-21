@@ -10,8 +10,8 @@
   "message.easyspec.reset_key": "§a%s restablecido al valor predeterminado",
 
   "message.easyspec.set_success": "§a%s establecido a %s",
-  "message.easyspec.set_error_invalid_key": "§cOpción de configuración desconocida: %s. Disponibles: language, trigger, hideTrigger",
+  "message.easyspec.set_error_invalid_key": "§cOpción de configuración desconocida: %s. Disponibles: language, trigger, hideTrigger, permissionLevel",
   "message.easyspec.set_error_invalid_value": "§cValor no válido para %s: %s",
 
-  "message.easyspec.info": "§a--- Configuración ---\n §7Idioma: §f%s\n §7Activador: §f!%s\n §7Ocultar activador: §f%s"
+  "message.easyspec.info": "§a--- Configuración ---\n §7Idioma: §f%s\n §7Activador: §f!%s\n §7Ocultar activador: §f%s\n §7Nivel de permiso: §f%s"
 }

@@ -24,14 +24,16 @@ import java.util.concurrent.CompletableFuture;
  *   /easyspec reset <key>  — Resets a single config option to its default value.
  *   /easyspec set <key> <value> — Sets a config option to the given value.
  *   /easyspec info         — Displays all current configuration values.
- *                            Requires op level 2.
+ * <p>
+ * The required permission level is read from the config (permissionLevel key,
+ * default 2 = operator). Use /easyspec set permissionLevel <0-4> to change it.
  */
 public class EasySpecCommand {
 
     public static void register(@NotNull CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(
                 Commands.literal("easyspec")
-                        .requires(source -> source.hasPermission(2))
+                        .requires(source -> source.hasPermission(Config.getInstance().getPermissionLevel()))
                         .then(Commands.literal("reload")
                                 .executes(EasySpecCommand::reloadConfig)
                         )
@@ -136,8 +138,10 @@ public class EasySpecCommand {
         String trigger = config.getTrigger();
         String hideTrigger = String.valueOf(config.isHideTrigger());
 
+        String permissionLevel = String.valueOf(config.getPermissionLevel());
+
         context.getSource().sendSuccess(
-                () -> Component.literal("§a[EasySpec] " + Messages.get("info").formatted(language, trigger, hideTrigger)),
+                () -> Component.literal("§a[EasySpec] " + Messages.get("info").formatted(language, trigger, hideTrigger, permissionLevel)),
                 false
         );
         return 1;
@@ -151,7 +155,7 @@ public class EasySpecCommand {
             SuggestionsBuilder builder
     ) {
         return SharedSuggestionProvider.suggest(
-                new String[]{"language", "trigger", "hideTrigger"},
+                new String[]{"language", "trigger", "hideTrigger", "permissionLevel"},
                 builder
         );
     }
@@ -175,6 +179,9 @@ public class EasySpecCommand {
             );
             case "hideTrigger" -> SharedSuggestionProvider.suggest(
                     new String[]{"true", "false"}, builder
+            );
+            case "permissionLevel" -> SharedSuggestionProvider.suggest(
+                    new String[]{"0", "1", "2", "3", "4"}, builder
             );
             default -> builder.buildFuture();
         };
