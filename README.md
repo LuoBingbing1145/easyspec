@@ -4,7 +4,7 @@
 ![Fabric](https://img.shields.io/badge/loader-Fabric-dbd0b4)
 ![License](https://img.shields.io/badge/license-CC0--1.0-blue)
 
-**EasySpec** is a lightweight, server-side-only Fabric mod that lets players toggle **Spectator Mode** instantly by typing a configurable trigger word in chat. No commands, no permissions, no client-side installation required — just type and go.
+**EasySpec** is a lightweight, server-side-only Fabric mod that lets players toggle **Spectator Mode** instantly by typing a configurable trigger word in chat. It also provides a full command system (`/easyspec`) for administrators to manage configuration at runtime. No client-side installation required — just type and go.
 
 > ⚡ Type `!s` (configurable) in chat to enter spectator mode. Type it again to return to exactly where you were.
 
@@ -22,6 +22,8 @@
 - **Config auto-repair** — Missing or invalid config fields are automatically reset with a warning, keeping your settings intact.
 - **ModMenu support** — Description translation key included for ModMenu compatibility.
 - **Thread-safe** — Safe for use with chat plugins and proxy environments (Velocity, BungeeCord).
+- **Runtime configuration** — Change `language`, `trigger`, `hideTrigger`, or `permissionLevel` on the fly with `/easyspec set`, no server restart needed.
+- **Configurable permission level** — Control who can use `/easyspec` commands via the `permissionLevel` config option (0–4).
 
 ---
 
@@ -41,15 +43,16 @@ The whole mod runs on the **server thread** via `server.execute(...)`, so it's s
 ## Installation
 
 1. Install **Fabric Loader** (≥0.19.2) on your server.
-2. Drop the `easyspec-1.1.0.jar` into your server's `mods/` folder.
+2. Drop the `easyspec-1.4.0.jar` into your server's `mods/` folder.
 3. Restart the server. That's it — clients need nothing.
 
 ### Dependencies
 
-| Dependency                                  | Version | Required      |
-|---------------------------------------------|---------|---------------|
-| [Fabric Loader](https://fabricmc.net/use/)  | ≥0.19.2 | ✅            |
-| [ModMenu](https://modrinth.com/mod/modmenu) | any     | ❌ (optional) |
+| Dependency                                        | Version | Required      |
+|---------------------------------------------------|---------|---------------|
+| [Fabric Loader](https://fabricmc.net/use/)        | ≥0.19.2 | ✅            |
+| [Fabric API](https://modrinth.com/mod/fabric-api) | ≥0.92.11 | ✅            |
+| [ModMenu](https://modrinth.com/mod/modmenu)       | any     | ❌ (optional) |
 
 ---
 
@@ -66,19 +69,24 @@ The config file is located at `config/easyspec.json` in your server's root direc
   "_comment2": "Trigger word: type '!' + this in chat to toggle spectator. Default: s (i.e. !s)",
   "trigger": "s",
   "_comment3": "Hide the trigger message from chat (default: false). Set true to hide it so other players don't see it in chat.",
-  "hideTrigger": false
+  "hideTrigger": false,
+  "_comment4": "Required permission level for /easyspec commands (0-4). Default: 2 (operator). Set 0 for all players.",
+  "permissionLevel": 2
 }
 ```
 
 ### Options
 
-| Field         | Type    | Default   | Description                                                           |
-|---------------|---------|-----------|-----------------------------------------------------------------------|
-| `language`    | string  | `"en_us"` | Language for feedback messages. See supported languages below.        |
-| `trigger`     | string  | `"s"`     | The word after `!` used to toggle. E.g. `"spec"` → type `!spec`.      |
-| `hideTrigger` | boolean | `false`   | Whether to hide the trigger message from chat. Set `true` to hide it. |
+| Field             | Type    | Default   | Description                                                                                   |
+|-------------------|---------|-----------|-----------------------------------------------------------------------------------------------|
+| `language`        | string  | `"en_us"` | Language for feedback messages. See supported languages below.                                |
+| `trigger`         | string  | `"s"`     | The word after `!` used to toggle. E.g. `"spec"` → type `!spec`.                              |
+| `hideTrigger`     | boolean | `false`   | Whether to hide the trigger message from chat. Set `true` to hide it.                         |
+| `permissionLevel` | integer | `2`       | Required permission level (0–4) for `/easyspec` commands. `0` = all players, `2` = operators. |
 
 If any field is missing or invalid, the mod will **auto-reset** the bad field, log a warning, and save the corrected file.
+- The `permissionLevel` is validated to be within 0–4; out-of-range values reset to `2`.
+- After changing `permissionLevel` via the config file, run `/easyspec reload` to apply.
 
 > **Tip:** The messages shown to players always reflect the actual trigger configured. For example, if `trigger` is set to `"spec"`, your players will see "Type **!spec** to toggle."
 
@@ -105,21 +113,27 @@ If any field is missing or invalid, the mod will **auto-reset** the bad field, l
 3. You are now in spectator mode — fly through walls, observe players, explore freely.
 4. Type `!s` again to return to your original position and game mode.
 
-> **No permissions required** — any player on the server can use the trigger.
+> **No permissions required to toggle** — any player can type the trigger to enter/exit spectator mode. The `/easyspec` admin commands are protected by the `permissionLevel` config (default: operator only).
 
 ---
 
 ## Commands
 
-The following commands are available for server operators (permission level 2):
+The required permission level for `/easyspec` commands is controlled by the `permissionLevel` config option (default: `2` — operator). Set it to `0` to allow all players to use these commands.
 
-| Command                    | Description                                   |
-|----------------------------|-----------------------------------------------|
-| `/easyspec reload`         | Reload config from `config/easyspec.json`     |
-| `/easyspec reset`          | Reset config to default values and save       |
+| Command                            | Description                                        |
+|------------------------------------|----------------------------------------------------|
+| `/easyspec reload`                 | Reload config from `config/easyspec.json`          |
+| `/easyspec reset`                  | Reset **all** config to default values and save    |
+| `/easyspec reset <key>`            | Reset a single config option to its default value  |
+| `/easyspec set <key> <value>`      | Set a config option to the given value             |
+| `/easyspec info`                   | Display all current configuration values           |
 
 > **`/easyspec reload`** re-reads the config file from disk without restarting the server.
-> **`/easyspec reset`** restores all config fields to their defaults (`en_us`, `s`, `false`) and overwrites the file.
+> **`/easyspec reset`** restores all config fields to their defaults and overwrites the file.
+> **`/easyspec reset <key>`** resets one field only. Available keys: `language`, `trigger`, `hideTrigger`, `permissionLevel`.
+> **`/easyspec set <key> <value>`** modifies a config option at runtime and persists it to disk. Supports tab-completion for keys and valid values. Example: `/easyspec set language zh_cn`.
+> **`/easyspec info`** prints the current `language`, `trigger`, `hideTrigger`, and `permissionLevel` in chat.
 
 ---
 
@@ -127,14 +141,19 @@ The following commands are available for server operators (permission level 2):
 
 If you want to customize or add a language, the translation files are located in the mod JAR at `assets/easyspec/lang/`. Each file is a simple JSON with the following keys:
 
-| Key                                       | Purpose                                                         |
-|-------------------------------------------|-----------------------------------------------------------------|
-| `mod.easyspec.name`                       | Mod display name                                                |
-| `modmenu.descriptionTranslation.easyspec` | ModMenu description                                             |
-| `message.easyspec.toggled`                | Message when entering spectator (use `%s` for the trigger word) |
-| `message.easyspec.restored`               | Message when returning from spectator                           |
-| `message.easyspec.reloaded`               | Message shown after `/easyspec reload`                          |
-| `message.easyspec.reset`                  | Message shown after `/easyspec reset`                           |
+| Key                                        | Purpose                                                         |
+|--------------------------------------------|-----------------------------------------------------------------|
+| `mod.easyspec.name`                        | Mod display name                                                |
+| `modmenu.descriptionTranslation.easyspec`  | ModMenu description                                             |
+| `message.easyspec.toggled`                 | Message when entering spectator (use `%s` for the trigger word) |
+| `message.easyspec.restored`                | Message when returning from spectator                           |
+| `message.easyspec.reloaded`                | Message shown after `/easyspec reload`                          |
+| `message.easyspec.reset`                   | Message shown after `/easyspec reset`                           |
+| `message.easyspec.reset_key`               | Message shown after `/easyspec reset <key>`                     |
+| `message.easyspec.set_success`             | Confirmation after `/easyspec set`                              |
+| `message.easyspec.set_error_invalid_key`   | Error when an unknown config key is used                        |
+| `message.easyspec.set_error_invalid_value` | Error when an invalid value is provided                         |
+| `message.easyspec.info`                    | `/easyspec info` output template                                |
 
 ---
 
@@ -160,25 +179,28 @@ EasySpec's core is intentionally minimal:
 
 ```
 src/main/java/lbb/easyspec/
-├── EasySpec.java              # Mod entrypoint
+├── EasySpec.java              # Mod entrypoint — registers commands via Fabric API
 ├── SpectatorManager.java      # Toggle logic & SavedData-backed persistence
 │   └── PlayerStateStore       # Inner SavedData: persists states per-world
 ├── command/
-│   └── EasySpecCommand.java   # /easyspec reload & reset commands
+│   └── EasySpecCommand.java   # /easyspec reload, reset, set, info commands
 ├── config/
-│   ├── Config.java            # Config loading & auto-repair
+│   ├── Config.java            # Config loading, auto-repair, runtime set/reset
 │   └── Messages.java          # Translation system
 └── mixin/
-    ├── ChatMessageMixin.java  # Chat interception mixin
-    └── CommandRegisterMixin.java  # Command registration mixin
+    └── ChatMessageMixin.java  # Chat interception mixin
 ```
+
+**Command registration** now uses Fabric API's `CommandRegistrationCallback` instead of a dedicated mixin — the `CommandRegisterMixin.java` has been removed.
+
+**Runtime configuration:** `Config.set(key, value)` and `Config.reset(key)` enable `/easyspec set` and `/easyspec reset <key>` without a server restart. The permission level is checked dynamically at command dispatch time via `Config.getInstance().getPermissionLevel()`.
 
 **Persistence design:** `SpectatorManager.PlayerStateStore` extends `SavedData` and is obtained via `server.overworld().getDataStorage().computeIfAbsent(...)`. States are serialized as JSON inside a single NBT `CompoundTag` string field, stored at `world/data/easyspec-player-states.dat`. This ensures:
 - Data survives server restarts
 - Each world save has independent state tracking
 - Minecraft's auto-save mechanism handles flush timing
 
-The mixin targets `ServerGamePacketListenerImpl#handleChat` and defers work to the server thread, making it safe for any server environment.
+The chat mixin targets `ServerGamePacketListenerImpl#handleChat` and defers work to the server thread, making it safe for any server environment.
 
 ---
 
