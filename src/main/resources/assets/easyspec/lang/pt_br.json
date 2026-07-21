@@ -11,5 +11,7 @@
 
   "message.easyspec.set_success": "§a%s definido para %s",
   "message.easyspec.set_error_invalid_key": "§cOpção de configuração desconhecida: %s. Disponíveis: language, trigger, hideTrigger",
-  "message.easyspec.set_error_invalid_value": "§cValor inválido para %s: %s"
+  "message.easyspec.set_error_invalid_value": "§cValor inválido para %s: %s",
+
+  "message.easyspec.info": "§a--- Configuração ---\n §7Idioma: §f%s\n §7Gatilho: §f!%s\n §7Ocultar gatilho: §f%s"
 }

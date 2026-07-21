@@ -11,5 +11,7 @@
 
   "message.easyspec.set_success": "§a%s défini à %s",
   "message.easyspec.set_error_invalid_key": "§cOption de configuration inconnue : %s. Disponibles : language, trigger, hideTrigger",
-  "message.easyspec.set_error_invalid_value": "§cValeur invalide pour %s : %s"
+  "message.easyspec.set_error_invalid_value": "§cValeur invalide pour %s : %s",
+
+  "message.easyspec.info": "§a--- Configuration ---\n §7Langue : §f%s\n §7Déclencheur : §f!%s\n §7Masquer le message : §f%s"
 }

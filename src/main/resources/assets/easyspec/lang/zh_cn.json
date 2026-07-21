@@ -11,5 +11,7 @@
 
   "message.easyspec.set_success": "§a已将 %s 设置为 %s",
   "message.easyspec.set_error_invalid_key": "§c未知的配置选项：%s。可用选项：language, trigger, hideTrigger",
-  "message.easyspec.set_error_invalid_value": "§c配置选项 %s 的值无效：%s"
+  "message.easyspec.set_error_invalid_value": "§c配置选项 %s 的值无效：%s",
+
+  "message.easyspec.info": "§a--- 当前配置 ---\n §7语言: §f%s\n §7触发词: §f!%s\n §7隐藏触发消息: §f%s"
 }

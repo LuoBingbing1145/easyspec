@@ -11,5 +11,7 @@
 
   "message.easyspec.set_success": "§a%s установлено на %s",
   "message.easyspec.set_error_invalid_key": "§cНеизвестная опция конфигурации: %s. Доступно: language, trigger, hideTrigger",
-  "message.easyspec.set_error_invalid_value": "§cНедопустимое значение для %s: %s"
+  "message.easyspec.set_error_invalid_value": "§cНедопустимое значение для %s: %s",
+
+  "message.easyspec.info": "§a--- Конфигурация ---\n §7Язык: §f%s\n §7Триггер: §f!%s\n §7Скрыть триггер: §f%s"
 }

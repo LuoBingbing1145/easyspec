@@ -22,6 +22,8 @@ import java.util.concurrent.CompletableFuture;
  *   /easyspec reload       — Reloads config/easyspec.json and re-initializes translations.
  *   /easyspec reset        — Resets config/easyspec.json to default values.
  *   /easyspec reset <key>  — Resets a single config option to its default value.
+ *   /easyspec set <key> <value> — Sets a config option to the given value.
+ *   /easyspec info         — Displays all current configuration values.
  *                            Requires op level 2.
  */
 public class EasySpecCommand {
@@ -48,6 +50,9 @@ public class EasySpecCommand {
                                                 .executes(EasySpecCommand::setConfig)
                                         )
                                 )
+                        )
+                        .then(Commands.literal("info")
+                                .executes(EasySpecCommand::showInfo)
                         )
         );
     }
@@ -123,6 +128,19 @@ public class EasySpecCommand {
             );
             return 0;
         }
+    }
+
+    private static int showInfo(@NotNull CommandContext<CommandSourceStack> context) {
+        Config config = Config.getInstance();
+        String language = config.getLanguage();
+        String trigger = config.getTrigger();
+        String hideTrigger = String.valueOf(config.isHideTrigger());
+
+        context.getSource().sendSuccess(
+                () -> Component.literal("§a[EasySpec] " + Messages.get("info").formatted(language, trigger, hideTrigger)),
+                false
+        );
+        return 1;
     }
 
     /**
