@@ -6,5 +6,9 @@
   "message.easyspec.restored": "§aModo de juego original restaurado y teletransportado de vuelta.",
 
   "message.easyspec.reloaded": "§a¡Configuración recargada con éxito!",
-  "message.easyspec.reset": "§a¡Configuración restablecida a valores predeterminados!"
+  "message.easyspec.reset": "§a¡Configuración restablecida a valores predeterminados!",
+
+  "message.easyspec.set_success": "§a%s establecido a %s",
+  "message.easyspec.set_error_invalid_key": "§cOpción de configuración desconocida: %s. Disponibles: language, trigger, hideTrigger",
+  "message.easyspec.set_error_invalid_value": "§cValor no válido para %s: %s"
 }

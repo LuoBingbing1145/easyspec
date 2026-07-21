@@ -125,6 +125,47 @@ public class Config {
     }
 
     /**
+     * Set a config option by key. Validates the value, updates the instance, and saves to disk.
+     *
+     * @param key   the config key (language, trigger, hideTrigger)
+     * @param value the value to set (as a string; booleans accept "true"/"false")
+     * @throws IllegalArgumentException if the key is unknown or the value is invalid
+     */
+    public static void set(@NotNull String key, @NotNull String value) throws IllegalArgumentException {
+        Config config = getInstance();
+
+        switch (key) {
+            case "language" -> {
+                if (!Messages.SUPPORTED_LANGUAGES.contains(value)) {
+                    throw new IllegalArgumentException(Messages.get("set_error_invalid_value").formatted(key, value));
+                }
+                config.language = value;
+            }
+            case "trigger" -> {
+                if (value.isBlank()) {
+                    throw new IllegalArgumentException(Messages.get("set_error_invalid_value").formatted(key, value));
+                }
+                config.trigger = value.trim();
+            }
+            case "hideTrigger" -> {
+                if ("true".equalsIgnoreCase(value)) {
+                    config.hideTrigger = true;
+                } else if ("false".equalsIgnoreCase(value)) {
+                    config.hideTrigger = false;
+                } else {
+                    throw new IllegalArgumentException(Messages.get("set_error_invalid_value").formatted(key, value));
+                }
+            }
+            default ->
+                    throw new IllegalArgumentException(Messages.get("set_error_invalid_key").formatted(key));
+        }
+
+        Path configFile = FabricLoader.getInstance().getConfigDir().resolve("easyspec.json");
+        saveConfig(configFile);
+        LOGGER.info("EasySpec config option '{}' set to '{}'", key, value);
+    }
+
+    /**
      * Save config with human-readable comments, using the current instance values.
      * Used for both first-time creation and repairing missing/invalid fields.
      */

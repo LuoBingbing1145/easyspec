@@ -6,5 +6,9 @@
   "message.easyspec.restored": "§a已返回原游戏模式并传送回原位",
 
   "message.easyspec.reloaded": "§a配置文件已重新加载！",
-  "message.easyspec.reset": "§a配置文件已重置为默认值！"
+  "message.easyspec.reset": "§a配置文件已重置为默认值！",
+
+  "message.easyspec.set_success": "§a已将 %s 设置为 %s",
+  "message.easyspec.set_error_invalid_key": "§c未知的配置选项：%s。可用选项：language, trigger, hideTrigger",
+  "message.easyspec.set_error_invalid_value": "§c配置选项 %s 的值无效：%s"
 }

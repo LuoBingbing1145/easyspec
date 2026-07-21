@@ -6,5 +6,9 @@
   "message.easyspec.restored": "§aMode de jeu original restauré et téléportation effectuée.",
 
   "message.easyspec.reloaded": "§aFichier de configuration rechargé avec succès !",
-  "message.easyspec.reset": "§aConfiguration réinitialisée aux valeurs par défaut !"
+  "message.easyspec.reset": "§aConfiguration réinitialisée aux valeurs par défaut !",
+
+  "message.easyspec.set_success": "§a%s défini à %s",
+  "message.easyspec.set_error_invalid_key": "§cOption de configuration inconnue : %s. Disponibles : language, trigger, hideTrigger",
+  "message.easyspec.set_error_invalid_value": "§cValeur invalide pour %s : %s"
 }

@@ -3,7 +3,7 @@
 	"id": "easyspec",
 	"version": "${version}",
 	"name": "EasySpec",
-	"description": "Type !s to toggle spectator mode, type !s again to return.",
+	"description": "Type the configured trigger in chat to toggle spectator mode and return.",
 	"authors": [
 		"LBB285",
 		"MotherWang"
