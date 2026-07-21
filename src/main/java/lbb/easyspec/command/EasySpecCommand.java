@@ -19,9 +19,10 @@ import java.util.concurrent.CompletableFuture;
  * Registers the /easyspec command tree.
  * <p>
  * Commands:
- *   /easyspec reload — Reloads config/easyspec.json and re-initializes translations.
- *   /easyspec reset  — Resets config/easyspec.json to default values.
- *                      Requires op level 2.
+ *   /easyspec reload       — Reloads config/easyspec.json and re-initializes translations.
+ *   /easyspec reset        — Resets config/easyspec.json to default values.
+ *   /easyspec reset <key>  — Resets a single config option to its default value.
+ *                            Requires op level 2.
  */
 public class EasySpecCommand {
 
@@ -34,6 +35,10 @@ public class EasySpecCommand {
                         )
                         .then(Commands.literal("reset")
                                 .executes(EasySpecCommand::resetConfig)
+                                .then(Commands.argument("key", StringArgumentType.word())
+                                        .suggests(EasySpecCommand::suggestKeys)
+                                        .executes(EasySpecCommand::resetConfigByKey)
+                                )
                         )
                         .then(Commands.literal("set")
                                 .then(Commands.argument("key", StringArgumentType.word())
@@ -76,6 +81,25 @@ public class EasySpecCommand {
         } catch (Exception e) {
             context.getSource().sendFailure(
                     Component.literal("§c[EasySpec] Failed to reset config: " + e.getMessage())
+            );
+            return 0;
+        }
+    }
+
+    private static int resetConfigByKey(CommandContext<CommandSourceStack> context) {
+        String key = StringArgumentType.getString(context, "key");
+
+        try {
+            Config.reset(key);
+            Messages.reload();
+            context.getSource().sendSuccess(
+                    () -> Component.literal("§a[EasySpec] " + Messages.get("reset_key").formatted(key)),
+                    true
+            );
+            return 1;
+        } catch (IllegalArgumentException e) {
+            context.getSource().sendFailure(
+                    Component.literal("§c[EasySpec] " + e.getMessage())
             );
             return 0;
         }

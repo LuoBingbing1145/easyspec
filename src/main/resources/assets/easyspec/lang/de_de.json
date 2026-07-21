@@ -7,6 +7,7 @@
 
   "message.easyspec.reloaded": "§aKonfiguration erfolgreich neu geladen!",
   "message.easyspec.reset": "§aKonfiguration auf Standardwerte zurückgesetzt!",
+  "message.easyspec.reset_key": "§a%s auf Standardwert zurückgesetzt",
 
   "message.easyspec.set_success": "§a%s auf %s gesetzt",
   "message.easyspec.set_error_invalid_key": "§cUnbekannte Konfigurationsoption: %s. Verfügbar: language, trigger, hideTrigger",

@@ -7,6 +7,7 @@
 
   "message.easyspec.reloaded": "§a設定ファイルを再読み込みしました！",
   "message.easyspec.reset": "§a設定をデフォルト値にリセットしました！",
+  "message.easyspec.reset_key": "§a%s をデフォルト値にリセットしました",
 
   "message.easyspec.set_success": "§a%s を %s に設定しました",
   "message.easyspec.set_error_invalid_key": "§c不明な設定オプション: %s。使用可能: language, trigger, hideTrigger",

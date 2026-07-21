@@ -125,6 +125,28 @@ public class Config {
     }
 
     /**
+     * Reset a single config option to its default value by key.
+     *
+     * @param key the config key to reset (language, trigger, hideTrigger)
+     * @throws IllegalArgumentException if the key is unknown
+     */
+    public static void reset(@NotNull String key) throws IllegalArgumentException {
+        Config config = getInstance();
+
+        switch (key) {
+            case "language" -> config.language = "en_us";
+            case "trigger" -> config.trigger = "s";
+            case "hideTrigger" -> config.hideTrigger = false;
+            default ->
+                    throw new IllegalArgumentException(Messages.get("set_error_invalid_key").formatted(key));
+        }
+
+        Path configFile = FabricLoader.getInstance().getConfigDir().resolve("easyspec.json");
+        saveConfig(configFile);
+        LOGGER.info("EasySpec config option '{}' reset to default", key);
+    }
+
+    /**
      * Set a config option by key. Validates the value, updates the instance, and saves to disk.
      *
      * @param key   the config key (language, trigger, hideTrigger)

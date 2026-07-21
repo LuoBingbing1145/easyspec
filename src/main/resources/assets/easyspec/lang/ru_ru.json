@@ -7,6 +7,7 @@
 
   "message.easyspec.reloaded": "§aКонфигурация успешно перезагружена!",
   "message.easyspec.reset": "§aКонфигурация сброшена до значений по умолчанию!",
+  "message.easyspec.reset_key": "§a%s сброшено до значения по умолчанию",
 
   "message.easyspec.set_success": "§a%s установлено на %s",
   "message.easyspec.set_error_invalid_key": "§cНеизвестная опция конфигурации: %s. Доступно: language, trigger, hideTrigger",
