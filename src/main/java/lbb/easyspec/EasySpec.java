@@ -1,7 +1,9 @@
 package lbb.easyspec;
 
+import lbb.easyspec.command.EasySpecCommand;
 import lbb.easyspec.config.Config;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.resources.ResourceLocation;
 
 import org.jetbrains.annotations.Contract;
@@ -16,6 +18,9 @@ public class EasySpec implements ModInitializer {
     @Override
     public void onInitialize() {
         Config.load();
+        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) ->
+                EasySpecCommand.register(dispatcher)
+        );
         LOGGER.info("EasySpec initialized!");
     }
 
