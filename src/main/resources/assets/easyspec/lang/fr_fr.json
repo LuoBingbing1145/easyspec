@@ -5,13 +5,15 @@
   "message.easyspec.toggled": "§aMode spectateur activé. Tapez !%s pour revenir.",
   "message.easyspec.restored": "§aMode de jeu original restauré et téléportation effectuée.",
 
+  "message.easyspec.no_permission": "§cVous n'avez pas la permission d'utiliser le déclencheur !",
+
   "message.easyspec.reloaded": "§aFichier de configuration rechargé avec succès !",
   "message.easyspec.reset": "§aConfiguration réinitialisée aux valeurs par défaut !",
   "message.easyspec.reset_key": "§a%s réinitialisé à la valeur par défaut",
 
   "message.easyspec.set_success": "§a%s défini à %s",
-  "message.easyspec.set_error_invalid_key": "§cOption de configuration inconnue : %s. Disponibles : language, trigger, hideTrigger, permissionLevel",
+  "message.easyspec.set_error_invalid_key": "§cOption de configuration inconnue : %s. Disponibles : language, trigger, hideTrigger, permissionLevel, triggerPermissionLevel",
   "message.easyspec.set_error_invalid_value": "§cValeur invalide pour %s : %s",
 
-  "message.easyspec.info": "§a--- Configuration ---\n §7Langue : §f%s\n §7Déclencheur : §f!%s\n §7Masquer le message : §f%s\n §7Niveau de permission : §f%s"
+  "message.easyspec.info": "§a--- Configuration ---\n §7Langue : §f%s\n §7Déclencheur : §f!%s\n §7Masquer le message : §f%s\n §7Niveau de permission : §f%s\n §7Niveau de permission déclencheur : §f%s"
 }

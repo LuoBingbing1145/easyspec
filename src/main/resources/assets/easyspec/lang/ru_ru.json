@@ -5,13 +5,15 @@
   "message.easyspec.toggled": "§aВключен режим наблюдения. Напишите !%s чтобы вернуться.",
   "message.easyspec.restored": "§aИсходный режим игры восстановлен, вы перемещены обратно.",
 
+  "message.easyspec.no_permission": "§cУ вас нет прав на использование триггера!",
+
   "message.easyspec.reloaded": "§aКонфигурация успешно перезагружена!",
   "message.easyspec.reset": "§aКонфигурация сброшена до значений по умолчанию!",
   "message.easyspec.reset_key": "§a%s сброшено до значения по умолчанию",
 
   "message.easyspec.set_success": "§a%s установлено на %s",
-  "message.easyspec.set_error_invalid_key": "§cНеизвестная опция конфигурации: %s. Доступно: language, trigger, hideTrigger, permissionLevel",
+  "message.easyspec.set_error_invalid_key": "§cНеизвестная опция конфигурации: %s. Доступно: language, trigger, hideTrigger, permissionLevel, triggerPermissionLevel",
   "message.easyspec.set_error_invalid_value": "§cНедопустимое значение для %s: %s",
 
-  "message.easyspec.info": "§a--- Конфигурация ---\n §7Язык: §f%s\n §7Триггер: §f!%s\n §7Скрыть триггер: §f%s\n §7Уровень прав: §f%s"
+  "message.easyspec.info": "§a--- Конфигурация ---\n §7Язык: §f%s\n §7Триггер: §f!%s\n §7Скрыть триггер: §f%s\n §7Уровень прав: §f%s\n §7Уровень прав триггера: §f%s"
 }

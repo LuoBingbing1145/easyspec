@@ -2,6 +2,8 @@ package lbb.easyspec.mixin;
 
 import lbb.easyspec.SpectatorManager;
 import lbb.easyspec.config.Config;
+import lbb.easyspec.config.Messages;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ServerboundChatPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
@@ -29,6 +31,20 @@ public abstract class ChatMessageMixin {
         String trigger = "!" + Config.getInstance().getTrigger();
         if (message.equalsIgnoreCase(trigger)) {
             if (player != null) {
+                // Check permission — if the player doesn't have the required level, notify them
+                int requiredLevel = Config.getInstance().getTriggerPermissionLevel();
+                if (!player.hasPermissions(requiredLevel)) {
+                    ServerPlayer p = player;
+                    p.server.execute(() -> p.sendSystemMessage(Component.literal(
+                            Messages.get("no_permission")
+                    )));
+                    // Cancel or broadcast the chat message based on hideTrigger
+                    if (Config.getInstance().isHideTrigger()) {
+                        ci.cancel();
+                    }
+                    return;
+                }
+
                 // Must run on server thread — handleChat is called from Netty IO thread
                 // and teleport/gamemode changes require the main server thread
                 ServerPlayer p = player;

@@ -5,13 +5,15 @@
   "message.easyspec.toggled": "§aModo espectador activado. Escribe !%s para volver.",
   "message.easyspec.restored": "§aModo de juego original restaurado y teletransportado de vuelta.",
 
+  "message.easyspec.no_permission": "§c¡No tienes permiso para usar el activador!",
+
   "message.easyspec.reloaded": "§a¡Configuración recargada con éxito!",
   "message.easyspec.reset": "§a¡Configuración restablecida a valores predeterminados!",
   "message.easyspec.reset_key": "§a%s restablecido al valor predeterminado",
 
   "message.easyspec.set_success": "§a%s establecido a %s",
-  "message.easyspec.set_error_invalid_key": "§cOpción de configuración desconocida: %s. Disponibles: language, trigger, hideTrigger, permissionLevel",
+  "message.easyspec.set_error_invalid_key": "§cOpción de configuración desconocida: %s. Disponibles: language, trigger, hideTrigger, permissionLevel, triggerPermissionLevel",
   "message.easyspec.set_error_invalid_value": "§cValor no válido para %s: %s",
 
-  "message.easyspec.info": "§a--- Configuración ---\n §7Idioma: §f%s\n §7Activador: §f!%s\n §7Ocultar activador: §f%s\n §7Nivel de permiso: §f%s"
+  "message.easyspec.info": "§a--- Configuración ---\n §7Idioma: §f%s\n §7Activador: §f!%s\n §7Ocultar activador: §f%s\n §7Nivel de permiso: §f%s\n §7Nivel de permiso del activador: §f%s"
 }

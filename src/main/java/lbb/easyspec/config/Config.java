@@ -20,6 +20,7 @@ public class Config {
     private String trigger = "s";
     private boolean hideTrigger = false;
     private int permissionLevel = 2;
+    private int triggerPermissionLevel = 0;
 
     private static Config instance;
 
@@ -46,6 +47,10 @@ public class Config {
         return permissionLevel;
     }
 
+    public int getTriggerPermissionLevel() {
+        return triggerPermissionLevel;
+    }
+
     public static Config load() {
         Path configDir = FabricLoader.getInstance().getConfigDir();
         Path configFile = configDir.resolve("easyspec.json");
@@ -60,10 +65,12 @@ public class Config {
                 if (raw == null || !raw.has("trigger")) repaired = true;
                 if (raw == null || !raw.has("hideTrigger")) repaired = true;
                 if (raw == null || !raw.has("permissionLevel")) repaired = true;
+                if (raw == null || !raw.has("triggerPermissionLevel")) repaired = true;
                 if (raw == null || !raw.has("_comment1")) repaired = true;
                 if (raw == null || !raw.has("_comment2")) repaired = true;
                 if (raw == null || !raw.has("_comment3")) repaired = true;
                 if (raw == null || !raw.has("_comment4")) repaired = true;
+                if (raw == null || !raw.has("_comment5")) repaired = true;
 
                 instance = GSON.fromJson(json, Config.class);
                 if (instance == null) {
@@ -83,6 +90,11 @@ public class Config {
                 // hideTrigger missing from JSON — Gson leaves primitive boolean as false, which is the desired default
                 if (raw != null && !raw.has("hideTrigger")) {
                     instance.hideTrigger = false;
+                    repaired = true;
+                }
+                // triggerPermissionLevel missing from JSON
+                if (raw != null && !raw.has("triggerPermissionLevel")) {
+                    instance.triggerPermissionLevel = 0;
                     repaired = true;
                 }
 
@@ -109,6 +121,13 @@ public class Config {
                     repaired = true;
                 }
 
+                // Validate triggerPermissionLevel (must be 0-4)
+                if (instance.triggerPermissionLevel < 0 || instance.triggerPermissionLevel > 4) {
+                    LOGGER.warn("Invalid triggerPermissionLevel '{}' in config, resetting to default 0", instance.triggerPermissionLevel);
+                    instance.triggerPermissionLevel = 0;
+                    repaired = true;
+                }
+
                 // Re-save with comments if anything was missing or invalid
                 if (repaired) {
                     saveConfig(configFile);
@@ -122,7 +141,7 @@ public class Config {
             saveConfig(configFile);
         }
 
-        LOGGER.info("EasySpec config loaded: language={}, trigger=!{}, hideTrigger={}, permissionLevel={}", instance.language, instance.trigger, instance.hideTrigger, instance.permissionLevel);
+        LOGGER.info("EasySpec config loaded: language={}, trigger=!{}, hideTrigger={}, permissionLevel={}, triggerPermissionLevel={}", instance.language, instance.trigger, instance.hideTrigger, instance.permissionLevel, instance.triggerPermissionLevel);
         return instance;
     }
 
@@ -152,6 +171,7 @@ public class Config {
             case "trigger" -> config.trigger = "s";
             case "hideTrigger" -> config.hideTrigger = false;
             case "permissionLevel" -> config.permissionLevel = 2;
+            case "triggerPermissionLevel" -> config.triggerPermissionLevel = 0;
             default ->
                     throw new IllegalArgumentException(Messages.get("set_error_invalid_key").formatted(key));
         }
@@ -204,6 +224,17 @@ public class Config {
                     throw new IllegalArgumentException(Messages.get("set_error_invalid_value").formatted(key, value));
                 }
             }
+            case "triggerPermissionLevel" -> {
+                try {
+                    int level = Integer.parseInt(value);
+                    if (level < 0 || level > 4) {
+                        throw new IllegalArgumentException(Messages.get("set_error_invalid_value").formatted(key, value));
+                    }
+                    config.triggerPermissionLevel = level;
+                } catch (NumberFormatException e) {
+                    throw new IllegalArgumentException(Messages.get("set_error_invalid_value").formatted(key, value));
+                }
+            }
             default ->
                     throw new IllegalArgumentException(Messages.get("set_error_invalid_key").formatted(key));
         }
@@ -230,9 +261,11 @@ public class Config {
                               "_comment3": "Hide the trigger message from chat (default: false). Set true to hide it so other players don't see it in chat.",
                               "hideTrigger": %s,
                               "_comment4": "Required permission level for /easyspec commands (0-4). Default: 2 (operator). Set 0 for all players.",
-                              "permissionLevel": %d
+                              "permissionLevel": %d,
+                              "_comment5": "Required permission level for using the trigger word in chat (0-4). Default: 0 (all players). Players below this level are ignored.",
+                              "triggerPermissionLevel": %d
                             }
-                            """.formatted(instance.language, instance.trigger, instance.hideTrigger, instance.permissionLevel);
+                            """.formatted(instance.language, instance.trigger, instance.hideTrigger, instance.permissionLevel, instance.triggerPermissionLevel);
             Files.writeString(configFile, json);
             LOGGER.info("Saved config to {}", configFile);
         } catch (IOException e) {

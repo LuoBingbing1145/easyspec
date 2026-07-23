@@ -5,13 +5,15 @@
   "message.easyspec.toggled": "§aModo espectador ativado. Digite !%s para voltar.",
   "message.easyspec.restored": "§aModo de jogo original restaurado e teleportado de volta.",
 
+  "message.easyspec.no_permission": "§cVocê não tem permissão para usar o gatilho!",
+
   "message.easyspec.reloaded": "§aConfiguração recarregada com sucesso!",
   "message.easyspec.reset": "§aConfiguração redefinida para os valores padrão!",
   "message.easyspec.reset_key": "§a%s redefinido para o valor padrão",
 
   "message.easyspec.set_success": "§a%s definido para %s",
-  "message.easyspec.set_error_invalid_key": "§cOpção de configuração desconhecida: %s. Disponíveis: language, trigger, hideTrigger, permissionLevel",
+  "message.easyspec.set_error_invalid_key": "§cOpção de configuração desconhecida: %s. Disponíveis: language, trigger, hideTrigger, permissionLevel, triggerPermissionLevel",
   "message.easyspec.set_error_invalid_value": "§cValor inválido para %s: %s",
 
-  "message.easyspec.info": "§a--- Configuração ---\n §7Idioma: §f%s\n §7Gatilho: §f!%s\n §7Ocultar gatilho: §f%s\n §7Nível de permissão: §f%s"
+  "message.easyspec.info": "§a--- Configuração ---\n §7Idioma: §f%s\n §7Gatilho: §f!%s\n §7Ocultar gatilho: §f%s\n §7Nível de permissão: §f%s\n §7Nível de permissão do gatilho: §f%s"
 }

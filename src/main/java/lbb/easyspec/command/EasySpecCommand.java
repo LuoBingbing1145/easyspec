@@ -1,6 +1,7 @@
 package lbb.easyspec.command;
 
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
@@ -9,7 +10,6 @@ import lbb.easyspec.config.Messages;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
-import com.mojang.brigadier.arguments.StringArgumentType;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
@@ -139,9 +139,10 @@ public class EasySpecCommand {
         String hideTrigger = String.valueOf(config.isHideTrigger());
 
         String permissionLevel = String.valueOf(config.getPermissionLevel());
+        String triggerPermissionLevel = String.valueOf(config.getTriggerPermissionLevel());
 
         context.getSource().sendSuccess(
-                () -> Component.literal("§a[EasySpec] " + Messages.get("info").formatted(language, trigger, hideTrigger, permissionLevel)),
+                () -> Component.literal("§a[EasySpec] " + Messages.get("info").formatted(language, trigger, hideTrigger, permissionLevel, triggerPermissionLevel)),
                 false
         );
         return 1;
@@ -155,7 +156,7 @@ public class EasySpecCommand {
             SuggestionsBuilder builder
     ) {
         return SharedSuggestionProvider.suggest(
-                new String[]{"language", "trigger", "hideTrigger", "permissionLevel"},
+                new String[]{"language", "trigger", "hideTrigger", "permissionLevel", "triggerPermissionLevel"},
                 builder
         );
     }
@@ -180,7 +181,7 @@ public class EasySpecCommand {
             case "hideTrigger" -> SharedSuggestionProvider.suggest(
                     new String[]{"true", "false"}, builder
             );
-            case "permissionLevel" -> SharedSuggestionProvider.suggest(
+            case "permissionLevel", "triggerPermissionLevel" -> SharedSuggestionProvider.suggest(
                     new String[]{"0", "1", "2", "3", "4"}, builder
             );
             default -> builder.buildFuture();
