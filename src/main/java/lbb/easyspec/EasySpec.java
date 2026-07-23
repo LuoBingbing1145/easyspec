@@ -6,6 +6,7 @@ import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.resources.ResourceLocation;
 
@@ -22,6 +23,15 @@ public class EasySpec implements ModInitializer {
     public static final String PERM_COMMAND = "easyspec.command";
     /** Permission node for using the {@code !s} trigger word in chat. */
     public static final String PERM_TRIGGER = "easyspec.trigger";
+
+    /**
+     * Check whether LuckPerms is loaded. When LP is active,
+     * {@code permissionLevel} and {@code triggerPermissionLevel} in the config
+     * file are ignored — LP manages these via permission nodes instead.
+     */
+    public static boolean isLuckPermsLoaded() {
+        return FabricLoader.getInstance().isModLoaded("luckperms");
+    }
 
     @Override
     public void onInitialize() {

@@ -15,5 +15,8 @@
   "message.easyspec.set_error_invalid_key": "§cНеизвестная опция конфигурации: %s. Доступно: language, trigger, hideTrigger, permissionLevel, triggerPermissionLevel",
   "message.easyspec.set_error_invalid_value": "§cНедопустимое значение для %s: %s",
 
-  "message.easyspec.info": "§a--- Конфигурация ---\n §7Язык: §f%s\n §7Триггер: §f!%s\n §7Скрыть триггер: §f%s\n §7Уровень прав: §f%s\n §7Уровень прав триггера: §f%s"
+  "message.easyspec.info": "§a--- Конфигурация ---\n §7Язык: §f%s\n §7Триггер: §f!%s\n §7Скрыть триггер: §f%s\n §7Уровень прав: §f%s\n §7Уровень прав триггера: §f%s",
+
+  "message.easyspec.lp_warning_command": "§e⚠ Обнаружен LuckPerms! 'permissionLevel' игнорируется. Используйте: /lp group <группа> permission set easyspec.command true",
+  "message.easyspec.lp_warning_trigger": "§e⚠ Обнаружен LuckPerms! 'triggerPermissionLevel' игнорируется. Используйте: /lp group <группа> permission set easyspec.trigger true"
 }

@@ -107,6 +107,7 @@ public class EasySpecCommand {
                     () -> Component.literal("§a[EasySpec] " + Messages.get("reset_key").formatted(key)),
                     true
             );
+            warnIfLuckPermsOverrides(context, key);
             return 1;
         } catch (IllegalArgumentException e) {
             context.getSource().sendFailure(
@@ -127,6 +128,7 @@ public class EasySpecCommand {
                     () -> Component.literal("§a[EasySpec] " + Messages.get("set_success").formatted(key, value)),
                     true
             );
+            warnIfLuckPermsOverrides(context, key);
             return 1;
         } catch (IllegalArgumentException e) {
             context.getSource().sendFailure(
@@ -150,6 +152,28 @@ public class EasySpecCommand {
                 false
         );
         return 1;
+    }
+
+    /**
+     * If LuckPerms is installed and the config key being modified is
+     * {@code permissionLevel} or {@code triggerPermissionLevel}, send a
+     * warning to the command source that these values have no effect
+     * while LP is active.
+     */
+    private static void warnIfLuckPermsOverrides(CommandContext<CommandSourceStack> context, String key) {
+        if (!EasySpec.isLuckPermsLoaded()) return;
+
+        String warningKey = switch (key) {
+            case "permissionLevel" -> "lp_warning_command";
+            case "triggerPermissionLevel" -> "lp_warning_trigger";
+            default -> null;
+        };
+
+        if (warningKey != null) {
+            context.getSource().sendSystemMessage(
+                    Component.literal("§e[EasySpec] ⚠ " + Messages.get(warningKey))
+            );
+        }
     }
 
     /**
