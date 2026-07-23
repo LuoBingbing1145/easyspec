@@ -207,7 +207,7 @@ public class EasySpecCommand {
      */
     private static @NotNull CompletableFuture<Suggestions> suggestValues(
             CommandContext<CommandSourceStack> context,
-            SuggestionsBuilder builder
+            @NotNull SuggestionsBuilder builder
     ) {
         String keyName = StringArgumentType.getString(context, "key");
         return ConfigKeys.byName(keyName)
