@@ -18,5 +18,7 @@
   "message.easyspec.info": "§a--- 当前配置 ---\n §7语言: §f%s\n §7触发词: §f!%s\n §7隐藏触发消息: §f%s\n §7权限等级: §f%s\n §7触发词权限等级: §f%s",
 
   "message.easyspec.lp_warning_command": "§e⚠ 检测到 LuckPerms！'permissionLevel' 将被忽略。请用: /lp group <组名> permission set easyspec.command true",
-  "message.easyspec.lp_warning_trigger": "§e⚠ 检测到 LuckPerms！'triggerPermissionLevel' 将被忽略。请用: /lp group <组名> permission set easyspec.trigger true"
+  "message.easyspec.lp_warning_trigger": "§e⚠ 检测到 LuckPerms！'triggerPermissionLevel' 将被忽略。请用: /lp group <组名> permission set easyspec.trigger true",
+
+  "message.easyspec.lp_info": "LuckPerms 已激活 — 权限配置已忽略。实际生效: easyspec.command (命令) / easyspec.trigger (触发词)"
 }

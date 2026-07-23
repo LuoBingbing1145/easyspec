@@ -151,6 +151,16 @@ public class EasySpecCommand {
                 () -> Component.literal("§a[EasySpec] " + Messages.get("info").formatted(language, trigger, hideTrigger, permissionLevel, triggerPermissionLevel)),
                 false
         );
+
+        // When LuckPerms is installed, the config permission levels are ignored —
+        // LP manages these via permission nodes instead. Tell the admin what
+        // nodes are actually effective.
+        if (EasySpec.isLuckPermsLoaded()) {
+            context.getSource().sendSystemMessage(
+                    Component.literal("§e[EasySpec] ⚠ " + Messages.get("lp_info"))
+            );
+        }
+
         return 1;
     }
 

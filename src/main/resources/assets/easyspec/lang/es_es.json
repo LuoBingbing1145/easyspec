@@ -18,5 +18,7 @@
   "message.easyspec.info": "§a--- Configuración ---\n §7Idioma: §f%s\n §7Activador: §f!%s\n §7Ocultar activador: §f%s\n §7Nivel de permiso: §f%s\n §7Nivel de permiso del activador: §f%s",
 
   "message.easyspec.lp_warning_command": "§e⚠ ¡LuckPerms detectado! 'permissionLevel' es ignorado. Usa: /lp group <grupo> permission set easyspec.command true",
-  "message.easyspec.lp_warning_trigger": "§e⚠ ¡LuckPerms detectado! 'triggerPermissionLevel' es ignorado. Usa: /lp group <grupo> permission set easyspec.trigger true"
+  "message.easyspec.lp_warning_trigger": "§e⚠ ¡LuckPerms detectado! 'triggerPermissionLevel' es ignorado. Usa: /lp group <grupo> permission set easyspec.trigger true",
+
+  "message.easyspec.lp_info": "LuckPerms activo — configuración de permisos ignorada. Efectivo: easyspec.command (comandos) / easyspec.trigger (activador)"
 }

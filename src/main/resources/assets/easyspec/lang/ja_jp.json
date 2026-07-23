@@ -18,5 +18,7 @@
   "message.easyspec.info": "§a--- 設定 ---\n §7言語: §f%s\n §7トリガー: §f!%s\n §7トリガーを隠す: §f%s\n §7権限レベル: §f%s\n §7トリガー権限レベル: §f%s",
 
   "message.easyspec.lp_warning_command": "§e⚠ LuckPerms が検出されました！'permissionLevel' は無視されます。次を使用: /lp group <グループ> permission set easyspec.command true",
-  "message.easyspec.lp_warning_trigger": "§e⚠ LuckPerms が検出されました！'triggerPermissionLevel' は無視されます。次を使用: /lp group <グループ> permission set easyspec.trigger true"
+  "message.easyspec.lp_warning_trigger": "§e⚠ LuckPerms が検出されました！'triggerPermissionLevel' は無視されます。次を使用: /lp group <グループ> permission set easyspec.trigger true",
+
+  "message.easyspec.lp_info": "LuckPerms 有効 — 権限設定は無視されます。実効: easyspec.command (コマンド) / easyspec.trigger (トリガー)"
 }
