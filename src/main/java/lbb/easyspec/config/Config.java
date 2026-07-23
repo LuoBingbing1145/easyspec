@@ -19,7 +19,29 @@ public class Config {
     private String language = "en_us";
     private String trigger = "s";
     private boolean hideTrigger = false;
+
+    /**
+     * Permission for {@code /easyspec} commands.
+     *
+     * <p><b>With LuckPerms:</b> LP manages the {@code easyspec.command} permission
+     * node; this value is ignored. Use {@code /lp group <group> permission set
+     * easyspec.command true} instead.
+     *
+     * <p><b>Without LuckPerms:</b> Uses vanilla operator level (0–4).
+     * Default: 2 (operator). Set to 0 to allow all players.
+     */
     private int permissionLevel = 2;
+
+    /**
+     * Permission for using the {@code !s} trigger word in chat.
+     *
+     * <p><b>With LuckPerms:</b> LP manages the {@code easyspec.trigger}
+     * permission node; this value is ignored. Use {@code /lp group <group>
+     * permission set easyspec.trigger true} instead.
+     *
+     * <p><b>Without LuckPerms:</b> Uses vanilla operator level (0–4).
+     * Default: 0 (all players). Players below this level are ignored.
+     */
     private int triggerPermissionLevel = 0;
 
     private static Config instance;
@@ -70,7 +92,11 @@ public class Config {
                 if (raw == null || !raw.has("_comment2")) repaired = true;
                 if (raw == null || !raw.has("_comment3")) repaired = true;
                 if (raw == null || !raw.has("_comment4")) repaired = true;
+                if (raw == null || !raw.has("_comment4a")) repaired = true;
+                if (raw == null || !raw.has("_comment4b")) repaired = true;
                 if (raw == null || !raw.has("_comment5")) repaired = true;
+                if (raw == null || !raw.has("_comment5a")) repaired = true;
+                if (raw == null || !raw.has("_comment5b")) repaired = true;
 
                 instance = GSON.fromJson(json, Config.class);
                 if (instance == null) {
@@ -260,9 +286,13 @@ public class Config {
                               "trigger": "%s",
                               "_comment3": "Hide the trigger message from chat (default: false). Set true to hide it so other players don't see it in chat.",
                               "hideTrigger": %s,
-                              "_comment4": "Required permission level for /easyspec commands (0-4). Default: 2 (operator). Set 0 for all players.",
+                              "_comment4": "--- Permission: /easyspec command (permission node: easyspec.command) ---",
+                              "_comment4a": "Without LuckPerms: vanilla operator level 0-4. Default 2 (operator), 0 = all players.",
+                              "_comment4b": "With LuckPerms: this value is IGNORED. Use '/lp group <group> permission set easyspec.command true' instead.",
                               "permissionLevel": %d,
-                              "_comment5": "Required permission level for using the trigger word in chat (0-4). Default: 0 (all players). Players below this level are ignored.",
+                              "_comment5": "--- Permission: !s trigger word (permission node: easyspec.trigger) ---",
+                              "_comment5a": "Without LuckPerms: vanilla operator level 0-4. Default 0 (all players), 2+ = operators only.",
+                              "_comment5b": "With LuckPerms: this value is IGNORED. Use '/lp group <group> permission set easyspec.trigger true' instead.",
                               "triggerPermissionLevel": %d
                             }
                             """.formatted(instance.language, instance.trigger, instance.hideTrigger, instance.permissionLevel, instance.triggerPermissionLevel);

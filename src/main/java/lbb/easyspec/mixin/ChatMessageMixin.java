@@ -1,8 +1,10 @@
 package lbb.easyspec.mixin;
 
+import lbb.easyspec.EasySpec;
 import lbb.easyspec.SpectatorManager;
 import lbb.easyspec.config.Config;
 import lbb.easyspec.config.Messages;
+import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ServerboundChatPacket;
 import net.minecraft.server.level.ServerPlayer;
@@ -17,8 +19,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 /**
  * Intercepts chat messages to handle the spectator toggle trigger.
  * The trigger word is configurable via config/easyspec.json (default "!s").
- * When a player types the trigger in chat, it toggles spectator mode
- * and cancels the chat message so it's not broadcast to other players.
+ * When a player types the trigger in chat, it toggles spectator mode.
+ * <p>
+ * Permission check uses the {@code easyspec.trigger} permission node via
+ * Fabric Permissions API (compatible with LuckPerms). When no permission mod
+ * is installed, falls back to the vanilla operator level from config
+ * ({@code triggerPermissionLevel}, default 0 = all players).
  */
 @Mixin(ServerGamePacketListenerImpl.class)
 public abstract class ChatMessageMixin {
@@ -31,9 +37,10 @@ public abstract class ChatMessageMixin {
         String trigger = "!" + Config.getInstance().getTrigger();
         if (message.equalsIgnoreCase(trigger)) {
             if (player != null) {
-                // Check permission — if the player doesn't have the required level, notify them
+                // Check permission via Fabric Permissions API (supports LuckPerms).
+                // Falls back to vanilla operator level when no permission mod is installed.
                 int requiredLevel = Config.getInstance().getTriggerPermissionLevel();
-                if (!player.hasPermissions(requiredLevel)) {
+                if (!Permissions.check(player, EasySpec.PERM_TRIGGER, requiredLevel)) {
                     ServerPlayer p = player;
                     p.server.execute(() -> p.sendSystemMessage(Component.literal(
                             Messages.get("no_permission")
