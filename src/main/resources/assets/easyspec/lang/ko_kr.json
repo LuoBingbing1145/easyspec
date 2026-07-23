@@ -15,5 +15,10 @@
   "message.easyspec.set_error_invalid_key": "§c알 수 없는 설정 옵션: %s. 사용 가능: language, trigger, hideTrigger, permissionLevel, triggerPermissionLevel",
   "message.easyspec.set_error_invalid_value": "§c%s에 대한 잘못된 값: %s",
 
-  "message.easyspec.info": "§a--- 설정 ---\n §7언어: §f%s\n §7트리거: §f!%s\n §7트리거 숨기기: §f%s\n §7권한 레벨: §f%s\n §7트리거 권한 레벨: §f%s"
+  "message.easyspec.info": "§a--- 설정 ---\n §7언어: §f%s\n §7트리거: §f!%s\n §7트리거 숨기기: §f%s\n §7권한 레벨: §f%s\n §7트리거 권한 레벨: §f%s",
+
+  "message.easyspec.lp_warning_command": "§e⚠ LuckPerms 감지됨! 'permissionLevel'은 무시됩니다. 사용: /lp group <그룹> permission set easyspec.command true",
+  "message.easyspec.lp_warning_trigger": "§e⚠ LuckPerms 감지됨! 'triggerPermissionLevel'은 무시됩니다. 사용: /lp group <그룹> permission set easyspec.trigger true",
+
+  "message.easyspec.lp_info": "LuckPerms 활성화 — 권한 설정 무시됨. 적용: easyspec.command (명령어) / easyspec.trigger (트리거)"
 }

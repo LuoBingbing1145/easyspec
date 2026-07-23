@@ -15,5 +15,10 @@
   "message.easyspec.set_error_invalid_key": "§cOpção de configuração desconhecida: %s. Disponíveis: language, trigger, hideTrigger, permissionLevel, triggerPermissionLevel",
   "message.easyspec.set_error_invalid_value": "§cValor inválido para %s: %s",
 
-  "message.easyspec.info": "§a--- Configuração ---\n §7Idioma: §f%s\n §7Gatilho: §f!%s\n §7Ocultar gatilho: §f%s\n §7Nível de permissão: §f%s\n §7Nível de permissão do gatilho: §f%s"
+  "message.easyspec.info": "§a--- Configuração ---\n §7Idioma: §f%s\n §7Gatilho: §f!%s\n §7Ocultar gatilho: §f%s\n §7Nível de permissão: §f%s\n §7Nível de permissão do gatilho: §f%s",
+
+  "message.easyspec.lp_warning_command": "§e⚠ LuckPerms detectado! 'permissionLevel' é ignorado. Use: /lp group <grupo> permission set easyspec.command true",
+  "message.easyspec.lp_warning_trigger": "§e⚠ LuckPerms detectado! 'triggerPermissionLevel' é ignorado. Use: /lp group <grupo> permission set easyspec.trigger true",
+
+  "message.easyspec.lp_info": "LuckPerms ativo — config de permissão ignorada. Efetivo: easyspec.command (comandos) / easyspec.trigger (gatilho)"
 }

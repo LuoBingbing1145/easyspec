@@ -23,12 +23,23 @@ fabricApi {
 	}
 }
 
+repositories {
+	mavenCentral()
+}
+
 dependencies {
 	// To change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	mappings loom.officialMojangMappings()
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+	include(modImplementation("me.lucko:fabric-permissions-api:${project.fabric_permissions_api_version}") {
+		// Exclude transitive fabric-api dependencies — they come from our own
+		// fabric-api declaration and must match the Minecraft version (1.20.1).
+		// The fabric-permissions-api POM imports fabric-api-bom:0.97.0+1.20.4
+		// which would otherwise override our fabric-api version.
+		exclude group: 'net.fabricmc.fabric-api'
+	})
 }
 
 processResources {

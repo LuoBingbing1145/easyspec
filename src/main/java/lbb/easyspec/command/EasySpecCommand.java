@@ -5,10 +5,12 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
+import lbb.easyspec.EasySpec;
 import lbb.easyspec.config.ConfigKey;
 import lbb.easyspec.config.ConfigKeys;
 import lbb.easyspec.config.ConfigManager;
 import lbb.easyspec.config.Messages;
+import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
@@ -24,19 +26,21 @@ import java.util.concurrent.CompletableFuture;
  * Commands:
  *   /easyspec reload       — Reloads config/easyspec.json and re-initializes translations.
  *   /easyspec reset        — Resets config/easyspec.json to default values.
- *   /easyspec reset <key>  — Resets a single config option to its default value.
- *   /easyspec set <key> <value> — Sets a config option to the given value.
+ *   /easyspec reset {key}  — Resets a single config option to its default value.
+ *   /easyspec set {key} {value} — Sets a config option to the given value.
  *   /easyspec info         — Displays all current configuration values.
  * <p>
- * The required permission level is read from the config (permissionLevel key,
- * default 2 = operator). Use /easyspec set permissionLevel <0-4> to change it.
+ * Permission check uses the {@code easyspec.command} permission node via
+ * Fabric Permissions API (compatible with LuckPerms). When no permission mod
+ * is installed, falls back to the vanilla operator level from config
+ * ({@code permissionLevel}, default 2 = operator).
  */
 public class EasySpecCommand {
 
     public static void register(@NotNull CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(
                 Commands.literal("easyspec")
-                        .requires(source -> source.hasPermission(ConfigManager.getInstance().get(ConfigKeys.PERMISSION_LEVEL)))
+                        .requires(source -> Permissions.check(source, EasySpec.PERM_COMMAND, ConfigManager.getInstance().get(ConfigKeys.PERMISSION_LEVEL)))
                         .then(Commands.literal("reload")
                                 .executes(EasySpecCommand::reloadConfig)
                         )
@@ -106,6 +110,7 @@ public class EasySpecCommand {
                     () -> Component.literal("§a[EasySpec] " + Messages.get("reset_key").formatted(key)),
                     true
             );
+            warnIfLuckPermsOverrides(context, key);
             return 1;
         } catch (IllegalArgumentException e) {
             context.getSource().sendFailure(
@@ -126,6 +131,7 @@ public class EasySpecCommand {
                     () -> Component.literal("§a[EasySpec] " + Messages.get("set_success").formatted(key, value)),
                     true
             );
+            warnIfLuckPermsOverrides(context, key);
             return 1;
         } catch (IllegalArgumentException e) {
             context.getSource().sendFailure(
@@ -145,11 +151,43 @@ public class EasySpecCommand {
                 () -> Component.literal("§a[EasySpec] " + Messages.get("info").formatted(values)),
                 false
         );
+
+        // When LuckPerms is installed, the config permission levels are ignored —
+        // LP manages these via permission nodes instead. Tell the admin what
+        // nodes are actually effective.
+        if (EasySpec.isLuckPermsLoaded()) {
+            context.getSource().sendSystemMessage(
+                    Component.literal("§e[EasySpec] ⚠ " + Messages.get("lp_info"))
+            );
+        }
+
         return 1;
     }
 
     /**
-     * Suggest available config keys for the {@code key} argument.
+     * If LuckPerms is installed and the config key being modified is
+     * {@code permissionLevel} or {@code triggerPermissionLevel}, send a
+     * warning to the command source that these values have no effect
+     * while LP is active.
+     */
+    private static void warnIfLuckPermsOverrides(CommandContext<CommandSourceStack> context, String key) {
+        if (!EasySpec.isLuckPermsLoaded()) return;
+
+        String warningKey = switch (key) {
+            case "permissionLevel" -> "lp_warning_command";
+            case "triggerPermissionLevel" -> "lp_warning_trigger";
+            default -> null;
+        };
+
+        if (warningKey != null) {
+            context.getSource().sendSystemMessage(
+                    Component.literal("§e[EasySpec] ⚠ " + Messages.get(warningKey))
+            );
+        }
+    }
+
+    /**
+     * Suggest available config keys for the <code>key</code> argument.
      * Iterates {@link ConfigKeys#ALL} so newly added keys appear automatically.
      */
     private static @NotNull CompletableFuture<Suggestions> suggestKeys(
