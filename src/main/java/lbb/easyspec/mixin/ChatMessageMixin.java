@@ -29,7 +29,7 @@ public abstract class ChatMessageMixin {
     private void onChatMessage(@NotNull ServerboundChatPacket packet, CallbackInfo ci) {
         String message = packet.message().trim();
         String trigger = "!" + Config.getInstance().getTrigger();
-        if (message.equalsIgnoreCase(trigger)) {
+        if (message.equals(trigger)) {
             if (player != null) {
                 // Check permission — if the player doesn't have the required level, notify them
                 int requiredLevel = Config.getInstance().getTriggerPermissionLevel();
