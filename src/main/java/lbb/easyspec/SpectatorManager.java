@@ -4,7 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import lbb.easyspec.config.Config;
+import lbb.easyspec.config.ConfigKeys;
+import lbb.easyspec.config.ConfigManager;
 import lbb.easyspec.config.Messages;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -70,7 +71,7 @@ public class SpectatorManager {
             store.states.put(uuid, state);
             player.setGameMode(GameType.SPECTATOR);
             player.sendSystemMessage(Component.literal(
-                Messages.get("toggled").formatted(Config.getInstance().getTrigger())
+                Messages.get("toggled").formatted(ConfigManager.getInstance().get(ConfigKeys.TRIGGER))
             ));
         }
 

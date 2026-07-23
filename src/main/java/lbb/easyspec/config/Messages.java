@@ -8,7 +8,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Loads translations from the JSON language files in assets/easyspec/lang/.
@@ -17,10 +16,6 @@ import java.util.Set;
 public class Messages {
     private static final Logger LOGGER = LoggerFactory.getLogger("easyspec-messages");
     private static final Gson GSON = new Gson();
-
-    public static final Set<String> SUPPORTED_LANGUAGES = Set.of(
-            "zh_cn", "en_us", "ja_jp", "ko_kr", "fr_fr", "de_de", "es_es", "ru_ru", "pt_br"
-    );
 
     private static String currentLang = null;
     private static Map<String, String> currentMessages = null;
@@ -36,7 +31,7 @@ public class Messages {
     }
 
     public static String get(String key) {
-        String lang = Config.getInstance().getLanguage();
+        String lang = ConfigManager.getInstance().get(ConfigKeys.LANGUAGE);
         if (!lang.equals(currentLang) || currentMessages == null) {
             load(lang);
         }

@@ -1,7 +1,8 @@
 package lbb.easyspec.mixin;
 
 import lbb.easyspec.SpectatorManager;
-import lbb.easyspec.config.Config;
+import lbb.easyspec.config.ConfigKeys;
+import lbb.easyspec.config.ConfigManager;
 import lbb.easyspec.config.Messages;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ServerboundChatPacket;
@@ -28,18 +29,18 @@ public abstract class ChatMessageMixin {
     @Inject(method = "handleChat", at = @At("HEAD"), cancellable = true)
     private void onChatMessage(@NotNull ServerboundChatPacket packet, CallbackInfo ci) {
         String message = packet.message().trim();
-        String trigger = "!" + Config.getInstance().getTrigger();
+        String trigger = "!" + ConfigManager.getInstance().get(ConfigKeys.TRIGGER);
         if (message.equalsIgnoreCase(trigger)) {
             if (player != null) {
                 // Check permission — if the player doesn't have the required level, notify them
-                int requiredLevel = Config.getInstance().getTriggerPermissionLevel();
+                int requiredLevel = ConfigManager.getInstance().get(ConfigKeys.TRIGGER_PERMISSION_LEVEL);
                 if (!player.hasPermissions(requiredLevel)) {
                     ServerPlayer p = player;
                     p.server.execute(() -> p.sendSystemMessage(Component.literal(
                             Messages.get("no_permission")
                     )));
                     // Cancel or broadcast the chat message based on hideTrigger
-                    if (Config.getInstance().isHideTrigger()) {
+                    if (ConfigManager.getInstance().get(ConfigKeys.HIDE_TRIGGER)) {
                         ci.cancel();
                     }
                     return;
@@ -51,7 +52,7 @@ public abstract class ChatMessageMixin {
                 p.server.execute(() -> SpectatorManager.toggle(p));
 
                 // Only cancel the chat message when hideTrigger is enabled
-                if (Config.getInstance().isHideTrigger()) {
+                if (ConfigManager.getInstance().get(ConfigKeys.HIDE_TRIGGER)) {
                     ci.cancel();
                 }
             }

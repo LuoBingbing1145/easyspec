@@ -5,7 +5,9 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import lbb.easyspec.config.Config;
+import lbb.easyspec.config.ConfigKey;
+import lbb.easyspec.config.ConfigKeys;
+import lbb.easyspec.config.ConfigManager;
 import lbb.easyspec.config.Messages;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -13,6 +15,7 @@ import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -33,7 +36,7 @@ public class EasySpecCommand {
     public static void register(@NotNull CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(
                 Commands.literal("easyspec")
-                        .requires(source -> source.hasPermission(Config.getInstance().getPermissionLevel()))
+                        .requires(source -> source.hasPermission(ConfigManager.getInstance().get(ConfigKeys.PERMISSION_LEVEL)))
                         .then(Commands.literal("reload")
                                 .executes(EasySpecCommand::reloadConfig)
                         )
@@ -59,9 +62,9 @@ public class EasySpecCommand {
         );
     }
 
-    private static int reloadConfig(CommandContext<CommandSourceStack> context) {
+    private static int reloadConfig(@NotNull CommandContext<CommandSourceStack> context) {
         try {
-            Config.load();
+            ConfigManager.getInstance().reload();
             Messages.reload();
             context.getSource().sendSuccess(
                     () -> Component.literal("§a[EasySpec] " + Messages.get("reloaded")),
@@ -76,9 +79,9 @@ public class EasySpecCommand {
         }
     }
 
-    private static int resetConfig(CommandContext<CommandSourceStack> context) {
+    private static int resetConfig(@NotNull CommandContext<CommandSourceStack> context) {
         try {
-            Config.reset();
+            ConfigManager.getInstance().reset();
             Messages.reload();
             context.getSource().sendSuccess(
                     () -> Component.literal("§a[EasySpec] " + Messages.get("reset")),
@@ -93,11 +96,11 @@ public class EasySpecCommand {
         }
     }
 
-    private static int resetConfigByKey(CommandContext<CommandSourceStack> context) {
+    private static int resetConfigByKey(@NotNull CommandContext<CommandSourceStack> context) {
         String key = StringArgumentType.getString(context, "key");
 
         try {
-            Config.reset(key);
+            ConfigManager.getInstance().reset(key);
             Messages.reload();
             context.getSource().sendSuccess(
                     () -> Component.literal("§a[EasySpec] " + Messages.get("reset_key").formatted(key)),
@@ -112,12 +115,12 @@ public class EasySpecCommand {
         }
     }
 
-    private static int setConfig(CommandContext<CommandSourceStack> context) {
+    private static int setConfig(@NotNull CommandContext<CommandSourceStack> context) {
         String key = StringArgumentType.getString(context, "key");
         String value = StringArgumentType.getString(context, "value");
 
         try {
-            Config.set(key, value);
+            ConfigManager.getInstance().set(key, value);
             Messages.reload();
             context.getSource().sendSuccess(
                     () -> Component.literal("§a[EasySpec] " + Messages.get("set_success").formatted(key, value)),
@@ -133,58 +136,50 @@ public class EasySpecCommand {
     }
 
     private static int showInfo(@NotNull CommandContext<CommandSourceStack> context) {
-        Config config = Config.getInstance();
-        String language = config.getLanguage();
-        String trigger = config.getTrigger();
-        String hideTrigger = String.valueOf(config.isHideTrigger());
-
-        String permissionLevel = String.valueOf(config.getPermissionLevel());
-        String triggerPermissionLevel = String.valueOf(config.getTriggerPermissionLevel());
+        // Iterate ConfigKeys.ALL so adding a new key automatically includes it in the info display.
+        Object[] values = ConfigKeys.ALL.stream()
+                .map(k -> String.valueOf(ConfigManager.getInstance().getData().get(k)))
+                .toArray();
 
         context.getSource().sendSuccess(
-                () -> Component.literal("§a[EasySpec] " + Messages.get("info").formatted(language, trigger, hideTrigger, permissionLevel, triggerPermissionLevel)),
+                () -> Component.literal("§a[EasySpec] " + Messages.get("info").formatted(values)),
                 false
         );
         return 1;
     }
 
     /**
-     * Suggest available config keys for the <code>key</code> argument.
+     * Suggest available config keys for the {@code key} argument.
+     * Iterates {@link ConfigKeys#ALL} so newly added keys appear automatically.
      */
     private static @NotNull CompletableFuture<Suggestions> suggestKeys(
             CommandContext<CommandSourceStack> context,
             SuggestionsBuilder builder
     ) {
-        return SharedSuggestionProvider.suggest(
-                new String[]{"language", "trigger", "hideTrigger", "permissionLevel", "triggerPermissionLevel"},
-                builder
-        );
+        List<String> keyNames = ConfigKeys.ALL.stream()
+                .map(ConfigKey::getKey)
+                .toList();
+        return SharedSuggestionProvider.suggest(keyNames, builder);
     }
 
     /**
-     * Suggest valid values for the <code>value</code> argument based on the chosen key.
-     * <ul>
-     *   <li>language → supported language codes</li>
-     *   <li>hideTrigger → true / false</li>
-     *   <li>trigger → free text, no suggestions</li>
-     * </ul>
+     * Suggest valid values for the {@code value} argument based on the chosen key.
+     * Uses each key's {@link ConfigKey#getSuggestions()} — returns an empty
+     * future if the key has no suggestions (free-text input) or is unknown.
      */
-    private static CompletableFuture<Suggestions> suggestValues(
+    private static @NotNull CompletableFuture<Suggestions> suggestValues(
             CommandContext<CommandSourceStack> context,
             SuggestionsBuilder builder
     ) {
-        String key = StringArgumentType.getString(context, "key");
-        return switch (key) {
-            case "language" -> SharedSuggestionProvider.suggest(
-                    Messages.SUPPORTED_LANGUAGES, builder
-            );
-            case "hideTrigger" -> SharedSuggestionProvider.suggest(
-                    new String[]{"true", "false"}, builder
-            );
-            case "permissionLevel", "triggerPermissionLevel" -> SharedSuggestionProvider.suggest(
-                    new String[]{"0", "1", "2", "3", "4"}, builder
-            );
-            default -> builder.buildFuture();
-        };
+        String keyName = StringArgumentType.getString(context, "key");
+        return ConfigKeys.byName(keyName)
+                .map(k -> {
+                    List<String> suggestions = k.getSuggestions();
+                    if (suggestions.isEmpty()) {
+                        return builder.buildFuture();
+                    }
+                    return SharedSuggestionProvider.suggest(suggestions, builder);
+                })
+                .orElse(builder.buildFuture());
     }
 }
